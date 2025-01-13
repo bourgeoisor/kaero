@@ -12,8 +12,9 @@ These features are currently supported.
 
 - 125 server replies (out of ~150 well known numerics) implemented
 - 31 user commands implemented
-- Can join up to 9 channels in one server
-- TLS support
+- Can join up to 9 channels in one server network
+- SSL/TLS support
+- UTF-8 support, including full-width characters
 
 ## Not supported
 
@@ -25,6 +26,7 @@ These features are not supported yet but may be implemented in the future.
 - Customizable colors
 - Customizable keybinds
 - Highlight mentions
+- Timestamps in logs
 - Direct messages
 - CTCP
 - DCC
@@ -32,7 +34,7 @@ These features are not supported yet but may be implemented in the future.
 - CAP negotiations
 - Identity registration
 - User list as a side panel
-- Multi-server support
+- Multi-network support
 
 ## Keybinds
 
