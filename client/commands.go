@@ -25,7 +25,7 @@ func (s *Server) handleCommand(input string, channel string) *utils.Message {
 
 	case "/quit":
 		message.Command = "QUIT"
-		if paramCount == 1 {
+		if paramCount >= 1 {
 			message.Parameters = []string{strings.Join(parts[1:], " ")}
 		}
 
@@ -77,7 +77,7 @@ func (s *Server) handleCommand(input string, channel string) *utils.Message {
 
 	case "/connect":
 		if paramCount > 3 {
-			s.invalidCommandParameters("<target server> [<port> [<remote server>]]")
+			s.invalidCommandParameters("/connect <target server> [<port> [<remote server>]]")
 			return nil
 		}
 		message.Command = "CONNECT"
@@ -287,6 +287,10 @@ func (s *Server) handleCommand(input string, channel string) *utils.Message {
 		message.Parameters = parts[1:]
 
 	case "/wallops":
+		if paramCount == 0 {
+			s.invalidCommandParameters(`/wallops <text>`)
+			return nil
+		}
 		message.Command = "WALLOPS"
 		message.Parameters = []string{strings.Join(parts[1:], " ")}
 
