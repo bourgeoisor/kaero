@@ -2,7 +2,7 @@ package client
 
 import (
 	"fmt"
-	"ribbirc/utils"
+	"kaero/utils"
 	"sync"
 )
 

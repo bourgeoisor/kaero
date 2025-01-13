@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"github.com/gdamore/tcell/v2"
-	"ribbirc/client"
-	"ribbirc/utils"
+	"kaero/client"
+	"kaero/utils"
 	"unicode"
 )
 
@@ -26,7 +26,7 @@ type Application struct {
 func New() (*Application, error) {
 	// @todo: temporary
 	listener := make(chan int)
-	server := client.New(listener, "irc.libera.chat", 6697, "ribbirc")
+	server := client.New(listener, "irc.libera.chat", 6697, "kaero-client")
 	err := server.Connect()
 	if err != nil {
 		return nil, err
@@ -176,7 +176,7 @@ func (a *Application) drawTopBar() {
 	}
 
 	channel := a.currentChannel()
-	text := fmt.Sprintf("RibbIRC v0.1.0")
+	text := fmt.Sprintf("Kaero v0.1.0")
 	if channel != nil {
 		text += fmt.Sprintf(" / %s [%d users]", a.channelTab, len(channel.Nicks))
 		if channel.Topic != "" {
