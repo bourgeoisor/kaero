@@ -13,7 +13,7 @@ These features are currently supported.
 - 125 server replies (out of ~150 well known numerics) implemented
 - 31 user commands implemented
 - Can join up to 9 channels in one server
-- TLS support
+- TLS support[text](d:/Lightroom.zip)
 
 ## Not supported
 
