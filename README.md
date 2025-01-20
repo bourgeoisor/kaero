@@ -2,7 +2,7 @@
 
 ## What is Kaero?
 
-Kaero is a lightweight and cozy terminal-based IRC client made in Golang. In Japanese, kaero 帰る means "to return (home)" which I find poetic for an IRC client. Its name is also close in sounds to kaeru かえる which means "frog" (thus the logo).
+Kaero is a lightweight and cozy terminal-based IRC client made in Golang. In Japanese, kaero 帰る means "to return (home)" which I find poetic for an IRC client. The name is also phonetically similar to kaeru かえる which means "frog" (thus the logo).
 
 ![screely-1736785076382](https://github.com/user-attachments/assets/a29c2621-36b5-4879-8f9c-fe0a5f89b00f)
 
