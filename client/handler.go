@@ -25,15 +25,15 @@ func (s *Server) handleServerMessage(message *utils.Message) {
 		s.log(message.Parameters[0])
 
 	case "JOIN":
-		if message.SourceNick() == s.nick {
+		if message.SourceNick() == s.Nick {
 			s.channelsJoined[message.Parameters[0]] = newChannel(message.Parameters[0])
-			s.channelsJoined[message.Parameters[0]].userJoin(s.nick)
+			s.channelsJoined[message.Parameters[0]].userJoin(s.Nick)
 		} else {
 			s.channelsJoined[message.Parameters[0]].userJoin(message.SourceNick())
 		}
 
 	case "PART":
-		if message.SourceNick() == s.nick {
+		if message.SourceNick() == s.Nick {
 			delete(s.channelsJoined, message.Parameters[0])
 		} else {
 			reason := ""
@@ -44,7 +44,7 @@ func (s *Server) handleServerMessage(message *utils.Message) {
 		}
 
 	case "QUIT":
-		if message.SourceNick() == s.nick {
+		if message.SourceNick() == s.Nick {
 			// @todo: exit server
 		} else {
 			reason := ""
@@ -57,11 +57,18 @@ func (s *Server) handleServerMessage(message *utils.Message) {
 		}
 
 	case "NICK":
-		if message.SourceNick() == s.nick {
-			s.nick = message.Parameters[0]
+		if message.SourceNick() == s.Nick {
+			s.Nick = message.Parameters[0]
 		}
 		for channel, _ := range s.channelsJoined {
 			s.channelsJoined[channel].userNick(message.SourceNick(), message.Parameters[0])
+		}
+
+	case "MODE":
+		// @todo: handle MODE properly
+
+		if !s.joinedConfigChannels {
+			s.HandleServerConnectionSuccessful()
 		}
 
 	case "PRIVMSG":
@@ -418,7 +425,7 @@ func (s *Server) handleServerMessage(message *utils.Message) {
 		if paramCount > 1 {
 			text += fmt.Sprintf(" (%s)", strings.Join(message.Parameters[1:paramCount-1], ", "))
 		}
-		s.logs.Append(s.host, utils.LogError, text)
+		s.logs.Append(s.Host, utils.LogError, text)
 		s.BufferWho = make([]string, 0)
 		s.BufferStats = make([]string, 0)
 

@@ -15,6 +15,7 @@ These features are currently supported.
 - Can join up to 9 channels in one server network
 - SSL/TLS support
 - UTF-8 with full-width characters
+- File-based configuration
 
 ## Not supported
 
@@ -22,7 +23,6 @@ These features are not supported yet but may be implemented in the future.
 
 - User prefixes
 - Channel prefixes
-- Config file
 - Customizable colors
 - Customizable keybinds
 - Highlight mentions
@@ -76,6 +76,30 @@ These features are not supported yet but may be implemented in the future.
 - `/links`
 - `/userhost <nickname>{ <nickname>}`
 - `/wallops <text>`
+
+## Config file
+
+Kaero expects a config file named `config.json` located at the root of the executable.
+
+Here's an example config:
+
+```json
+{
+    "servers": [
+        {
+            "host": "irc.libera.chat",
+            "port": 6697,
+            "ssl": true,
+            "nick": "myName",
+            "username": "myName",
+            "realName": "myName",
+            "defaultChannels": [
+                "#libera"
+            ]
+        }
+    ]
+}
+```
 
 ## How to run?
 

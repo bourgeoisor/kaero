@@ -27,12 +27,21 @@ type Application struct {
 }
 
 func New(version string) (*Application, error) {
-	// @todo: temporary
-	listener := make(chan int)
-	server := client.New(listener, "irc.libera.chat", 6697, "kaero-client")
-	err := server.Connect()
+	config, err := readConfig("config.json")
 	if err != nil {
 		return nil, err
+	}
+
+	listener := make(chan int)
+
+	servers := []*client.Server{}
+	for _, serverConfig := range config.Servers {
+		server := client.New(listener, serverConfig)
+		err = server.Connect()
+		if err != nil {
+			return nil, err
+		}
+		servers = append(servers, server)
 	}
 
 	screen, err := tcell.NewScreen()
@@ -44,7 +53,7 @@ func New(version string) (*Application, error) {
 		version:  version,
 		screen:   screen,
 		listener: listener,
-		server:   server,
+		server:   servers[0], // @todo: properly support multi-server
 	}, nil
 }
 

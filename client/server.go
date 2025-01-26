@@ -11,11 +11,7 @@ import (
 )
 
 type Server struct {
-	host     string
-	port     int
-	nick     string
-	username string
-	realName string
+	*utils.ServerConfig
 
 	name                  string
 	version               string
@@ -23,10 +19,11 @@ type Server struct {
 	availableChannelModes string
 	iSupport              *ISupport
 
-	conn           *tls.Conn
-	logs           *utils.Logger
-	listener       chan int
-	channelsJoined map[string]*Channel
+	conn                 *tls.Conn
+	logs                 *utils.Logger
+	listener             chan int
+	channelsJoined       map[string]*Channel
+	joinedConfigChannels bool
 
 	bufferMotd  []string
 	bufferHelp  []string
@@ -37,13 +34,9 @@ type Server struct {
 	BufferStats []string
 }
 
-func New(listener chan int, host string, port int, nick string) *Server {
+func New(listener chan int, config *utils.ServerConfig) *Server {
 	return &Server{
-		host:     host,
-		port:     port,
-		nick:     nick,
-		username: nick,
-		realName: nick,
+		ServerConfig: config,
 
 		iSupport: newISupport(),
 
@@ -66,10 +59,11 @@ func (s *Server) GetLogger() *utils.Logger {
 }
 
 func (s *Server) Connect() (err error) {
-	address := fmt.Sprintf("%s:%d", s.host, s.port)
+	address := fmt.Sprintf("%s:%d", s.Host, s.Port)
 	s.logs.Append("System", utils.LogStatus, fmt.Sprintf("Dialing %s...", address))
 
 	s.conn, err = tls.Dial("tcp", address, nil)
+	//s.conn, err = net.Dial("tcp", address) // @todo: support non-TLS too
 	if err != nil {
 		return err
 	}
@@ -78,10 +72,15 @@ func (s *Server) Connect() (err error) {
 
 	go s.listenToMessages()
 
-	s.SendMessage(&utils.Message{Command: "NICK", Parameters: []string{s.nick}})
-	s.SendMessage(&utils.Message{Command: "USER", Parameters: []string{s.username, "0", "*", s.realName}})
+	s.SendMessage(&utils.Message{Command: "NICK", Parameters: []string{s.Nick}})
+	s.SendMessage(&utils.Message{Command: "USER", Parameters: []string{s.Username, "0", "*", s.RealName}})
 
 	return nil
+}
+
+func (s *Server) HandleServerConnectionSuccessful() {
+	s.logs.Append("System", utils.LogStatus, "Connection successful.")
+	s.SendMessage(&utils.Message{Command: "JOIN", Parameters: []string{strings.Join(s.DefaultChannels, ",")}})
 }
 
 func (s *Server) ChannelNames() []string {
@@ -120,7 +119,7 @@ func (s *Server) HandleUserInput(input string, channel string) {
 		if channel != "" {
 			message.Command = "PRIVMSG"
 			message.Parameters = []string{channel, input}
-			s.channelsJoined[channel].Logs.Append(s.nick, utils.LogPrivMsg, input)
+			s.channelsJoined[channel].Logs.Append(s.Nick, utils.LogPrivMsg, input)
 		} else {
 			s.SendMessage(utils.UnmarshalMessage(string(input)))
 			return
@@ -146,5 +145,5 @@ func (s *Server) listenToMessages() {
 }
 
 func (s *Server) log(text string) {
-	s.logs.Append(s.host, utils.LogStatus, text)
+	s.logs.Append(s.Host, utils.LogStatus, text)
 }
