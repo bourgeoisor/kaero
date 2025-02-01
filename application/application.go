@@ -163,6 +163,12 @@ func (a *Application) handleKeyEvent(ev *tcell.EventKey) {
 				a.inputCursor++
 			}
 		}
+	} else {
+		if ev.Rune() == '/' {
+			a.inputText = append(a.inputText, '/')
+			a.inputCursor = 1
+			a.inputActive = true
+		}
 	}
 }
 
