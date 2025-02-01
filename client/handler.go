@@ -28,6 +28,7 @@ func (s *Server) handleServerMessage(message *utils.Message) {
 		if message.SourceNick() == s.Nick {
 			s.channelsJoined[message.Parameters[0]] = newChannel(message.Parameters[0])
 			s.channelsJoined[message.Parameters[0]].userJoin(s.Nick)
+			s.log(fmt.Sprintf("Joined channel %s.", message.Parameters[0]))
 		} else {
 			s.channelsJoined[message.Parameters[0]].userJoin(message.SourceNick())
 		}
@@ -68,6 +69,7 @@ func (s *Server) handleServerMessage(message *utils.Message) {
 		// @todo: handle MODE properly
 
 		if !s.joinedConfigChannels {
+			s.joinedConfigChannels = true
 			s.HandleServerConnectionSuccessful()
 		}
 

@@ -79,8 +79,10 @@ func (s *Server) Connect() (err error) {
 }
 
 func (s *Server) HandleServerConnectionSuccessful() {
-	s.logs.Append("System", utils.LogStatus, "Connection successful.")
-	s.SendMessage(&utils.Message{Command: "JOIN", Parameters: []string{strings.Join(s.DefaultChannels, ",")}})
+	defaultChannels := strings.Join(s.DefaultChannels, ",")
+	msg := fmt.Sprintf("Connection to %s:%d successful. Joining channels %s...", s.Host, s.Port, defaultChannels)
+	s.logs.Append("System", utils.LogStatus, msg)
+	s.SendMessage(&utils.Message{Command: "JOIN", Parameters: []string{defaultChannels}})
 }
 
 func (s *Server) ChannelNames() []string {
