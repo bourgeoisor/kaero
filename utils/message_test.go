@@ -29,9 +29,17 @@ func TestMarshalMessage(t *testing.T) {
 			input:  &Message{Command: "FOO", Parameters: []string{"some", "params", "is=equal"}},
 			output: "FOO some params is=equal",
 		},
-		"CommandParamsLast": {
+		"CommandParamsLastSpaces": {
 			input:  &Message{Command: "FOO", Parameters: []string{"some", "params", "this is the   last param"}},
 			output: "FOO some params :this is the   last param",
+		},
+		"CommandParamsLastColonSpaces": {
+			input:  &Message{Command: "FOO", Parameters: []string{"some", "params", ":this is the   last param"}},
+			output: "FOO some params ::this is the   last param",
+		},
+		"CommandParamsLastColon": {
+			input:  &Message{Command: "FOO", Parameters: []string{"some", "params", ":D"}},
+			output: "FOO some params ::D",
 		},
 	}
 

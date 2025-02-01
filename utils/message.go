@@ -64,6 +64,8 @@ func MarshalMessage(message *Message) string {
 	for i, parameter := range message.Parameters {
 		if i == len(message.Parameters)-1 && strings.ContainsRune(parameter, ' ') {
 			data += " :" + parameter
+		} else if i == len(message.Parameters)-1 && parameter[0] == ':' {
+			data += " :" + parameter
 		} else {
 			data += " " + parameter
 		}
