@@ -81,7 +81,7 @@ func (a *Application) drawLog(row int, log utils.Log) int {
 	height := 1
 	delimIndex := a.MaxNickLength + 1
 
-	maxWidth := a.width - 2*(delimIndex) - 3
+	maxWidth := a.width - 2*(delimIndex) - 4
 
 	switch log.Kind {
 	case utils.LogPrivMsg:

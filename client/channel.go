@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"kaero/utils"
 	"sort"
+	"strings"
 	"sync"
 )
 
@@ -83,11 +84,44 @@ func (c *Channel) userNick(oldNick string, newNick string) {
 }
 
 func (c *Channel) NicksListByMode() []string {
-	// @TODO: actually order by mode
 	nicks := make([]string, 0, len(c.Nicks))
 	for k := range c.Nicks {
 		nicks = append(nicks, k)
 	}
-	sort.Strings(nicks)
-	return nicks
+
+	return sortWithPrefixPriority(nicks)
+}
+
+func sortWithPrefixPriority(slice []string) []string {
+	priorities := map[string]int{
+		"~": 1,
+		"&": 2,
+		"@": 3,
+		"%": 4,
+		"+": 5,
+	}
+
+	sort.Slice(slice, func(i, j int) bool {
+		a := slice[i]
+		b := slice[j]
+
+		aPriority := 6
+		bPriority := 6
+
+		for prefix, priority := range priorities {
+			if strings.HasPrefix(a, prefix) {
+				aPriority = priority
+			}
+			if strings.HasPrefix(b, prefix) {
+				bPriority = priority
+			}
+		}
+
+		if aPriority != bPriority {
+			return aPriority < bPriority
+		} else {
+			return a < b
+		}
+	})
+	return slice
 }
