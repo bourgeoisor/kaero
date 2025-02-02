@@ -1,7 +1,8 @@
 package utils
 
 type Config struct {
-	Servers []*ServerConfig `json:"servers"`
+	Servers       []*ServerConfig `json:"servers"`
+	MaxNickLength int             `json:"maxNickLength"`
 }
 
 type ServerConfig struct {

@@ -25,5 +25,13 @@ func readConfig(path string) (*utils.Config, error) {
 		return nil, err
 	}
 
+	setDefaultConfig(config)
+
 	return config, nil
+}
+
+func setDefaultConfig(config *utils.Config) {
+	if config.MaxNickLength == 0 {
+		config.MaxNickLength = 16
+	}
 }

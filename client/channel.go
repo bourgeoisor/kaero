@@ -3,6 +3,7 @@ package client
 import (
 	"fmt"
 	"kaero/utils"
+	"sort"
 	"sync"
 )
 
@@ -79,4 +80,14 @@ func (c *Channel) userNick(oldNick string, newNick string) {
 		text := fmt.Sprintf("%s changed their nick to %s.", oldNick, newNick)
 		c.Logs.Append(oldNick, utils.LogSystem, text)
 	}
+}
+
+func (c *Channel) NicksListByMode() []string {
+	// @TODO: actually order by mode
+	nicks := make([]string, 0, len(c.Nicks))
+	for k := range c.Nicks {
+		nicks = append(nicks, k)
+	}
+	sort.Strings(nicks)
+	return nicks
 }

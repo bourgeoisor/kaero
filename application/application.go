@@ -3,6 +3,7 @@ package application
 import (
 	"github.com/gdamore/tcell/v2"
 	"kaero/client"
+	"kaero/utils"
 	"unicode"
 )
 
@@ -11,6 +12,8 @@ const (
 )
 
 type Application struct {
+	*utils.Config
+
 	version  string
 	screen   tcell.Screen
 	width    int
@@ -34,7 +37,7 @@ func New(version string) (*Application, error) {
 
 	listener := make(chan int)
 
-	servers := []*client.Server{}
+	var servers []*client.Server
 	for _, serverConfig := range config.Servers {
 		server := client.New(listener, serverConfig)
 		err = server.Connect()
@@ -50,6 +53,7 @@ func New(version string) (*Application, error) {
 	}
 
 	return &Application{
+		Config:   config,
 		version:  version,
 		screen:   screen,
 		listener: listener,

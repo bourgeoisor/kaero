@@ -80,8 +80,8 @@ func (s *Server) Connect() (err error) {
 
 func (s *Server) HandleServerConnectionSuccessful() {
 	defaultChannels := strings.Join(s.DefaultChannels, ",")
-	msg := fmt.Sprintf("Connection to %s:%d successful. Joining channels %s...", s.Host, s.Port, defaultChannels)
-	s.logs.Append("System", utils.LogStatus, msg)
+	s.logs.Append("System", utils.LogStatus, fmt.Sprintf("Connection to %s:%d successful", s.Host, s.Port))
+	s.logs.Append("System", utils.LogStatus, fmt.Sprintf("Joining channel(s) %s...", defaultChannels))
 	s.SendMessage(&utils.Message{Command: "JOIN", Parameters: []string{defaultChannels}})
 }
 
